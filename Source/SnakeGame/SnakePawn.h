@@ -27,24 +27,21 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-    float VelocityZ = 0.0f;
-    
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-    bool bGrounded = false;
-    
-    FVector Direction{0.0f, 0.0f, 0.0f};
-    
-    float Speed = 100.f;
+    void Move(float deltaTime);
+    void GravityUpdate(FVector& Position, float DeltaTime);
     
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
     TArray<ESnakeDirection> directionQueue;
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+    bool bGrounded = false;
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+    float VelocityZ = 0.0f;
     
+    float Speed = 100.f;
+    float movedTileDistance = 0.0f;
+    FVector Direction{0.0f, 0.0f, 0.0f};
     ESnakeDirection previousDirection =  ESnakeDirection::UP;
     
-    void Move(float deltaTime);
-
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

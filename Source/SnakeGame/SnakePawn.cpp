@@ -27,7 +27,23 @@ void ASnakePawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
     
+    movedTileDistance += Speed * DeltaTime;
     FVector Position = GetActorLocation();
+    
+    GravityUpdate(Position, DeltaTime);
+    
+    if(movedTileDistance > TileSize){
+        movedTileDistance = 0.f;
+        Move(DeltaTime);
+    }
+    
+    Position += Direction;
+    SetActorLocation(Position);
+
+}
+
+void ASnakePawn::GravityUpdate(FVector& Position, float DeltaTime){
+    
     // Update speed
     VelocityZ -= 10.0f * DeltaTime;
     // Update movement
@@ -46,13 +62,8 @@ void ASnakePawn::Tick(float DeltaTime)
     else{
         bGrounded = false;
     }
-    
-    Move(DeltaTime);
-    
-    Position += Direction;
-    SetActorLocation(Position);
-
 }
+
 
 void ASnakePawn::AddDirectionToQueue(ESnakeDirection direction){
     directionQueue.Emplace(direction);

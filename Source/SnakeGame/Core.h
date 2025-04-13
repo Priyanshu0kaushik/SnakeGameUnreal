@@ -10,3 +10,5 @@ enum class ESnakeDirection : uint8{
     LEFT =3,
     NONE = 255
 };
+
+constexpr float TileSize = 100.f;
