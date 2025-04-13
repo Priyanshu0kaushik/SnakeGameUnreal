@@ -1,0 +1,17 @@
+# Unreal Engine Git Ignore
+
+# Ignore folders
+Binaries/
+DerivedDataCache/
+Intermediate/
+Saved/
+Build/
+
+# Ignore system/IDE files
+*.sdf
+*.suo
+*.opensdf
+*.VC.db
+.vscode/
+.DS_Store
+Thumbs.db
