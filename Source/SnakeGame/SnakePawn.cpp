@@ -120,7 +120,7 @@ void ASnakePawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 void ASnakePawn::Jump(){
 //    VelocityZ = 10.f;
     if(bGrounded){
-        VelocityZ = 10.f;
+        VelocityZ = 5.f;
     }
     
 }
