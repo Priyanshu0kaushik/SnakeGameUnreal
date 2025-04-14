@@ -36,7 +36,7 @@ protected:
     bool bGrounded = false;
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
     float VelocityZ = 0.0f;
-    
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float Speed = 100.f;
     float movedTileDistance = 0.0f;
     FVector Direction{0.0f, 0.0f, 0.0f};
