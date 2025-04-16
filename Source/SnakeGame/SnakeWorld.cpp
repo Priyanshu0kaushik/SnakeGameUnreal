@@ -19,12 +19,12 @@ ASnakeWorld::ASnakeWorld()
 	WallComponent = CreateDefaultSubobject<UInstancedStaticMeshComponent>(TEXT("Wall Component"));
 	FloorComponent = CreateDefaultSubobject<UInstancedStaticMeshComponent>(TEXT("Floor Component"));
 	
-	WallComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	WallComponent->SetCollisionProfileName(TEXT("BlockAll"));
     
 	FloorComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	WallComponent->OnComponentBeginOverlap.AddDynamic(this, &ASnakeWorld::OnWallOverlapBegin);
+	
 	WallComponent->SetupAttachment(RootComponent);
 	FloorComponent->SetupAttachment(RootComponent);
 
@@ -98,6 +98,7 @@ void ASnakeWorld::OnWallOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor
 {
 	if (ASnakePawn* snakePawn = Cast<ASnakePawn>(OtherActor))
 	{
-		UE_LOG(LogTemp, Log, TEXT("Wall Collision"));
+		UE_LOG(LogTemp, Log, TEXT("Wall Collision with Snake"));
+		// game over
 	}
 }
