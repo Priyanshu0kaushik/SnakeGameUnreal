@@ -5,16 +5,16 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Components/SphereComponent.h"
-#include "BP_SnakeBody.generated.h"
+#include "SnakeBody.generated.h"
 
 UCLASS()
-class SNAKEGAME_API ABP_SnakeBody : public AActor
+class SNAKEGAME_API ASnakeBody : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	ABP_SnakeBody();
+	ASnakeBody();
     
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     USceneComponent* sceneComponent;

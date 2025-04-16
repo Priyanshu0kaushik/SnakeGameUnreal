@@ -13,6 +13,8 @@ ASnakePawn::ASnakePawn()
     
     CollisionComponent = CreateDefaultSubobject<USphereComponent>(TEXT("CollisionComponent"));
     CollisionComponent->SetupAttachment(RootComponent);
+    
+    CollisionComponent->OnComponentBeginOverlap.AddDynamic(this, &ASnakePawn::OnOverlapBegin);
 }
 
 // Called when the game starts or when spawned
@@ -115,6 +117,12 @@ void ASnakePawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+
+void ASnakePawn::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+    int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+    UE_LOG(LogTemp, Warning, TEXT("Collided with unhandled actor type: %s"), *OtherActor->GetName());
 }
 
 void ASnakePawn::Jump(){

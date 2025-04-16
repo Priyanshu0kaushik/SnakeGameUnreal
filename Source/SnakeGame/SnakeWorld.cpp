@@ -3,6 +3,8 @@
 
 #include "SnakeWorld.h"
 #include "Core.h"
+#include "SnakePawn.h"
+#include "SnakeBody.h"
 #include "Components/InstancedStaticMeshComponent.h"
 
 
@@ -16,7 +18,13 @@ ASnakeWorld::ASnakeWorld()
 	RootComponent = SceneComponent;
 	WallComponent = CreateDefaultSubobject<UInstancedStaticMeshComponent>(TEXT("Wall Component"));
 	FloorComponent = CreateDefaultSubobject<UInstancedStaticMeshComponent>(TEXT("Floor Component"));
+	
+	WallComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	WallComponent->SetCollisionProfileName(TEXT("BlockAll"));
+    
+	FloorComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
+	WallComponent->OnComponentBeginOverlap.AddDynamic(this, &ASnakeWorld::OnWallOverlapBegin);
 	WallComponent->SetupAttachment(RootComponent);
 	FloorComponent->SetupAttachment(RootComponent);
 
@@ -83,6 +91,13 @@ void ASnakeWorld::OnConstruction(const FTransform& Transform) {
 	WallComponent->ClearInstances();
 	FloorComponent->ClearInstances();
 	LoadLevel(LevelID);
+}
 
-
+void ASnakeWorld::OnWallOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (ASnakePawn* snakePawn = Cast<ASnakePawn>(OtherActor))
+	{
+		UE_LOG(LogTemp, Log, TEXT("Wall Collision"));
+	}
 }
