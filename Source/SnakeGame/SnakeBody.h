@@ -21,17 +21,24 @@ public:
     
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     USphereComponent* CollisionComponent;
+
+	void AddChildBodyPart(ASnakeBody* InChildBodyPart);
+
 protected:
+	UPROPERTY()
+	ASnakeBody* ChildBodyPart = nullptr;
+
+	UPROPERTY()
+	FVector NextPosition = FVector::ZeroVector;
+
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadwrite)
-	TSubclassOf<ASnakeBody> SnakeBodyPart; 
-	
-	FVector<ASnakeBody*> Body;
 
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	UFUNCTION()
+	void SetNextPosition(const FVector& InPosition);
 
 };

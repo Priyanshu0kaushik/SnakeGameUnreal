@@ -2,6 +2,7 @@
 
 
 #include "SnakePawn.h"
+#include "Apple.h"
 
 // Sets default values
 ASnakePawn::ASnakePawn()
@@ -32,13 +33,16 @@ void ASnakePawn::Tick(float DeltaTime)
     movedTileDistance += Speed * DeltaTime;
     FVector Position = GetActorLocation();
     
-    GravityUpdate(Position, DeltaTime);
-    
     if(movedTileDistance > TileSize){
         movedTileDistance = 0.f;
         Move(DeltaTime);
+        if (IsValid(ChildBodyPart))
+        {
+            ChildBodyPart->SetNextPosition(GetActorLocation());
+        }
     }
     
+    GravityUpdate(Position, DeltaTime);
     Position += Direction;
     SetActorLocation(Position);
 
@@ -76,40 +80,19 @@ void ASnakePawn::Move(float deltaTime){
     
     ESnakeDirection currentDirection = directionQueue[0];
     directionQueue.RemoveAt(0);
+
+    if (currentDirection == ESnakeDirection::UP && previousDirection == ESnakeDirection::DOWN) return;
+    if (currentDirection == ESnakeDirection::DOWN && previousDirection == ESnakeDirection::UP) return;
+    if (currentDirection == ESnakeDirection::RIGHT && previousDirection == ESnakeDirection::LEFT) return;
+    if (currentDirection == ESnakeDirection::LEFT && previousDirection == ESnakeDirection::RIGHT) return;
     
-    switch(currentDirection){
-        case ESnakeDirection::UP:
-            if(previousDirection == ESnakeDirection::DOWN) return;
-            Direction = FVector::ZeroVector;
-            Direction.X = Speed * deltaTime;
-            previousDirection = currentDirection;
-            CollisionComponent->SetRelativeRotation(FRotator(0.0f, 0.0f, 0.0f));
-            break;
-        case ESnakeDirection::RIGHT:
-            if(previousDirection == ESnakeDirection::LEFT) return;
-            Direction = FVector::ZeroVector;
-            Direction.Y += Speed * deltaTime;
-            previousDirection = currentDirection;
-            CollisionComponent->SetRelativeRotation(FRotator(0.0f, 90.0f, 0.0f));
-            break;
-        case ESnakeDirection::DOWN:
-            if(previousDirection == ESnakeDirection::UP) return;
-            Direction = FVector::ZeroVector;
-            Direction.X -= Speed * deltaTime;
-            previousDirection = currentDirection;
-            CollisionComponent->SetRelativeRotation(FRotator(0.0f, 180.0f, 0.0f));
-            break;
-        case ESnakeDirection::LEFT:
-            if(previousDirection == ESnakeDirection::RIGHT) return;
-            Direction = FVector::ZeroVector;
-            Direction.Y -= Speed * deltaTime;
-            previousDirection = currentDirection;
-            CollisionComponent->SetRelativeRotation(FRotator(0.0f, 270.0f, 0.0f));
-            break;
-        default:
-            return;
-            break;
-    }
+    FVector direction = DirectionToVector(currentDirection);
+
+    Direction = direction * Speed * deltaTime;
+    previousDirection = currentDirection;
+    
+    FRotator NewRotation = Direction.Rotation();
+    CollisionComponent->SetWorldRotation(NewRotation);
 }
 
 // Called to bind functionality to input
@@ -122,14 +105,55 @@ void ASnakePawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 void ASnakePawn::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
     int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-    UE_LOG(LogTemp, Warning, TEXT("Collided with unhandled actor type: %s"), *OtherActor->GetName());
+    if (AApple* apple = Cast<AApple>(OtherActor))
+    {
+        UE_LOG(LogTemp, Log, TEXT("Collision with Apple"));
+        AteApple();
+    }
 }
 
 void ASnakePawn::Jump(){
 //    VelocityZ = 10.f;
     if(bGrounded){
         VelocityZ = 5.f;
-    }
-    
+    }   
 }
+
+void ASnakePawn::AteApple(){
+    Grow();
+}
+
+void ASnakePawn::Grow()
+{
+    ASnakeBody* BodyPart = GetWorld()->SpawnActor<ASnakeBody>(SnakeBodyPart, GetActorLocation(), GetActorRotation(), FActorSpawnParameters());
+
+    if (IsValid(ChildBodyPart))
+    {
+        ChildBodyPart->AddChildBodyPart(BodyPart);
+    }
+    else
+    {
+        ChildBodyPart = BodyPart;
+    }
+}
+
+FVector ASnakePawn::DirectionToVector(ESnakeDirection Direction)
+{
+    switch (Direction)
+    {
+        case ESnakeDirection::UP:
+            return FVector::ForwardVector;
+        case ESnakeDirection::RIGHT:
+            return FVector::RightVector;
+        case ESnakeDirection::DOWN:
+            return FVector::BackwardVector;
+        case ESnakeDirection::LEFT:
+            return FVector::LeftVector;
+        case ESnakeDirection::NONE:
+            return FVector::ZeroVector;
+    }
+    return FVector::ZeroVector;
+}
+
+
 

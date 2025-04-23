@@ -1,6 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "SnakeBody.h"
 
 
@@ -28,6 +25,40 @@ void ASnakeBody::BeginPlay()
 void ASnakeBody::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	if (NextPosition != FVector::ZeroVector)
+	{
+		FVector Position = GetActorLocation();
+
+		FVector Forward = (NextPosition - Position).GetSafeNormal();
+
+		Position += Forward * DeltaTime * 500.0f;
+
+		SetActorLocation(Position);
+
+	}
 
 }
 
+void ASnakeBody::SetNextPosition(const FVector& InPosition)
+{
+	if (IsValid(ChildBodyPart))
+	{
+		ChildBodyPart->SetNextPosition(NextPosition);
+	}
+
+	NextPosition = InPosition;
+}
+
+void ASnakeBody::AddChildBodyPart(ASnakeBody* InChildBodyPart)
+{
+	if (IsValid(ChildBodyPart))
+	{
+		ChildBodyPart->AddChildBodyPart(InChildBodyPart);
+	}
+	else
+	{
+		ChildBodyPart = InChildBodyPart;
+
+		ChildBodyPart->SetActorLocation(GetActorLocation());
+	}
+}

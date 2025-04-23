@@ -1,5 +1,3 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
-
 #include "SnakeGame.h"
 #include "Core.h"
 #include "Modules/ModuleManager.h"

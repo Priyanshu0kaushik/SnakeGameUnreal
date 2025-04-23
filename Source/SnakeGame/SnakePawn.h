@@ -6,6 +6,7 @@
 #include "Core.h"
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
+#include "SnakeBody.h"
 #include "SnakePawn.generated.h"
 
 UCLASS()
@@ -29,7 +30,13 @@ protected:
 	virtual void BeginPlay() override;
     void Move(float deltaTime);
     void GravityUpdate(FVector& Position, float DeltaTime);
-    
+    void AteApple();
+	void Grow();
+	FVector DirectionToVector(ESnakeDirection Direction);
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<ASnakeBody> SnakeBodyPart;
+	
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
     TArray<ESnakeDirection> directionQueue;
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
@@ -41,7 +48,10 @@ protected:
     float movedTileDistance = 0.0f;
     FVector Direction{0.0f, 0.0f, 0.0f};
     ESnakeDirection previousDirection =  ESnakeDirection::UP;
-    
+	
+	UPROPERTY()
+	ASnakeBody* ChildBodyPart = nullptr;
+	
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
