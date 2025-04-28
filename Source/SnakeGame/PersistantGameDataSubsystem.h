@@ -34,7 +34,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	FGameData GetPlayGameData() const{ return PlayGameData; } 
 	UFUNCTION(BlueprintCallable)
-	EPlayersNum GetNoOfPlayer() {return PlayGameData.NumOfPlayers; }
+	int GetNoOfPlayer();
+	UFUNCTION(BlueprintCallable)
+	int GetNoOfAIPlayerRequired();
 	UFUNCTION(BlueprintCallable)
 	EGameMode GetGameMode() {return PlayGameData.GameMode; }
 	
