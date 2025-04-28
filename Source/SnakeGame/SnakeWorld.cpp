@@ -88,6 +88,7 @@ void ASnakeWorld::LoadLevel(FString levelId){
 void ASnakeWorld::OnConstruction(const FTransform& Transform) {
 	Super::OnConstruction(Transform);
 	UE_LOG(LogTemp, Log, TEXT("callledd"));
+	LevelList.Empty();
 	WallComponent->ClearInstances();
 	FloorComponent->ClearInstances();
 	LoadLevel(LevelID);

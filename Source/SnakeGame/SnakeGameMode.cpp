@@ -2,15 +2,19 @@
 
 #include "SnakeAIPlayerController.h"
 #include "PersistantGameDataSubsystem.h"
+#include "Kismet/GameplayStatics.h"
 #include "SnakeGameMode.h"
 
-#include "MainMenuWidget.h"
+
 
 APlayerController* ASnakeGameMode::SpawnPlayerController(ENetRole InRemoteRole, const FString& Options)
 {
 	UPersistantGameDataSubsystem*  subSystem =  GetGameInstance()->GetSubsystem<UPersistantGameDataSubsystem>();
 
-	if (subSystem->GetNoOfAIPlayerRequired()>AIPlayerCreated)
+	
+	int ControllersCount = UGameplayStatics::GetNumPlayerControllers(GetWorld());
+
+	if (subSystem->GetNoOfAIPlayerRequired()>AIPlayerCreated && ControllersCount>0)
 	{
 		AIPlayerCreated++;
 		UE_LOG(LogTemp, Log, TEXT("SpawnPlayerController spawned AI."));

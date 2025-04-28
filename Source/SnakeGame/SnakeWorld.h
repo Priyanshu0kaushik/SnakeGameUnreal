@@ -10,7 +10,8 @@ UCLASS()
 class SNAKEGAME_API ASnakeWorld : public AActor
 {
 	GENERATED_BODY()
-	
+private:
+	TArray<bool> LevelList;
 public:	
 	// Sets default values for this actor's properties
 	ASnakeWorld();

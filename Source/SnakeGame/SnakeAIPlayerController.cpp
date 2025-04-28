@@ -10,6 +10,7 @@ void ASnakeAIPlayerController::BeginPlay()
 
 void ASnakeAIPlayerController::OnPossess(APawn* InPawn)
 {
+	Super::OnPossess(InPawn);
 	SnakePawn = Cast<ASnakePawn>(InPawn);
 }
 
