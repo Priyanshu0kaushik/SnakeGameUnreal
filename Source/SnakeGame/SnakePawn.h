@@ -9,6 +9,7 @@
 #include "SnakeBody.h"
 #include "SnakePawn.generated.h"
 
+class ASnakeGameMode;
 UCLASS()
 class SNAKEGAME_API ASnakePawn : public APawn
 {
@@ -23,9 +24,12 @@ public:
     
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     USphereComponent* CollisionComponent;
-    
+    ASnakeGameMode* GameMode;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TArray<ESnakeDirection> directionQueue;
 
 protected:
+	
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
     void Move(float deltaTime);
@@ -37,8 +41,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<ASnakeBody> SnakeBodyPart;
 	
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-    TArray<ESnakeDirection> directionQueue;
+
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
     bool bGrounded = false;
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
@@ -52,7 +55,9 @@ protected:
 	UPROPERTY()
 	ASnakeBody* ChildBodyPart = nullptr;
 	
-public:	
+public:
+	DECLARE_MULTICAST_DELEGATE(FOnAppleEaten);
+	FOnAppleEaten AppleEatenDelegate;
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
     
@@ -69,4 +74,6 @@ public:
     
     UFUNCTION(BlueprintCallable)
     void AddDirectionToQueue(ESnakeDirection Direction);
+	
+
 };

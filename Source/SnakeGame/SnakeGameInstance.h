@@ -21,5 +21,5 @@ class SNAKEGAME_API USnakeGameInstance : public UGameInstance
 			return GetSubsystem<UMyGameStateSubsystem>();
 		}
 	
-	
+
 };

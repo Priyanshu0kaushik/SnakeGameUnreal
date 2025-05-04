@@ -2,7 +2,6 @@
 
 
 #include "SnakeWorld.h"
-#include "Core.h"
 #include "SnakePawn.h"
 #include "SnakeBody.h"
 #include "Components/InstancedStaticMeshComponent.h"
@@ -44,6 +43,7 @@ void ASnakeWorld::Tick(float DeltaTime)
 }
 
 void ASnakeWorld::LoadLevel(FString levelId){
+	WallPositions.Empty();
 	TArray<FString> lines;
 	UE_LOG(LogTemp, Log, TEXT("loadlevel"));
 	FString filePath = FPaths::ProjectDir() + TEXT("Levels/Level" + levelId + ".txt");
@@ -61,22 +61,30 @@ void ASnakeWorld::LoadLevel(FString levelId){
 				return;
 			}
 			for (int x = 0; x < line.Len(); x++) {
-				FTransform offset = FTransform(FRotator::ZeroRotator, FVector((lines.Num() - y) * 100, x * 100, 0.0f));
+				bool IsWall = false;
+				const int Index = y * WORLD_WIDTH + x;
+				FVector location = FVector((lines.Num() - y) * TileSize, x * TileSize, 0.0f);
+				FTransform offset = FTransform(FRotator::ZeroRotator, location );
 				switch (line[x]) {
 				case '#':
 					WallComponent->AddInstance(offset);
+					WallPositions.Add(location);
+					IsWall = true;
 					break;
 				case '.':
 					FloorComponent->AddInstance(offset);
 					break;
 				case 'O':
 					break;
+				default:
+					break;
 				}
+				 // LevelList[index] = IsWall;
 			}
-
 			y++;
 
 		}
+		UE_LOG(LogTemp, Log, TEXT("No. of Walls: %d"), WallPositions.Num());
 	}
 	else {
 		UE_LOG(LogTemp, Log, TEXT("file not found"));
@@ -102,4 +110,11 @@ void ASnakeWorld::OnWallOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor
 		UE_LOG(LogTemp, Log, TEXT("Wall Collision with Snake"));
 		// game over
 	}
+}
+
+bool ASnakeWorld::IsWall(int inX, int inY)
+{
+	if(inX >= WORLD_WIDTH || inY >= WORLD_HEIGHT || inX < 0 || inY < 0) return false;
+
+	return LevelList[inY * WORLD_WIDTH + inX];
 }

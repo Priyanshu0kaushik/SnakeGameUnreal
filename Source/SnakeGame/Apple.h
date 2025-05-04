@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Components/SphereComponent.h"
 #include "GameFramework/Actor.h"
 #include "Apple.generated.h"
 
@@ -14,6 +15,11 @@ class SNAKEGAME_API AApple : public AActor
 public:	
 	// Sets default values for this actor's properties
 	AApple();
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	USceneComponent* sceneComponent;
+    
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	USphereComponent* CollisionComponent;
 
 protected:
 	// Called when the game starts or when spawned

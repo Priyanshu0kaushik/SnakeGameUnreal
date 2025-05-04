@@ -3,6 +3,8 @@
 
 #include "SnakePawn.h"
 #include "Apple.h"
+#include "SnakeGameMode.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 ASnakePawn::ASnakePawn()
@@ -22,7 +24,7 @@ ASnakePawn::ASnakePawn()
 void ASnakePawn::BeginPlay()
 {
 	Super::BeginPlay();
-	
+    GameMode = Cast<ASnakeGameMode>(GetWorld()->GetAuthGameMode());
 }
 
 // Called every frame
@@ -109,6 +111,7 @@ void ASnakePawn::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* Oth
     {
         UE_LOG(LogTemp, Log, TEXT("Collision with Apple"));
         AteApple();
+        GetWorld()->DestroyActor(apple);
     }
 }
 
@@ -120,6 +123,10 @@ void ASnakePawn::Jump(){
 }
 
 void ASnakePawn::AteApple(){
+    if(GameMode)
+    {
+        GameMode->OnAppleEaten();
+    }
     Grow();
 }
 
@@ -154,6 +161,4 @@ FVector ASnakePawn::DirectionToVector(ESnakeDirection Direction)
     }
     return FVector::ZeroVector;
 }
-
-
 

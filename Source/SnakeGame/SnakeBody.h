@@ -23,7 +23,8 @@ public:
     USphereComponent* CollisionComponent;
 
 	void AddChildBodyPart(ASnakeBody* InChildBodyPart);
-
+	
+	ASnakeBody* GetChildBodyPart() const{return ChildBodyPart;}
 protected:
 	UPROPERTY()
 	ASnakeBody* ChildBodyPart = nullptr;
@@ -37,8 +38,9 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
+	
 	UFUNCTION()
 	void SetNextPosition(const FVector& InPosition);
-
+	
+	
 };

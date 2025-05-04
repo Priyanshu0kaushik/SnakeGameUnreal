@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Core.h"
 #include "SnakeWorld.generated.h"
 
 UCLASS()
@@ -32,6 +33,18 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FString LevelID = "1";
+
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE float GetWorldWidth() const { return WORLD_WIDTH; }
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE float GetWorldHeight() const { return WORLD_HEIGHT; }
+
+	UFUNCTION(BlueprintCallable)
+	bool IsWall(int inX, int inY);
+
+	TArray<FVector> WallPositions;
+
+	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
